@@ -55,6 +55,10 @@ Explicitly excluded: any frontend framework, vector DB/RAG (retrieval is AST-que
 
 Per `context/spec.md`: single provider repo per run, direct dependencies only, TypeScript/JavaScript + npm manifests only, consumers within one GitHub org, proposals only (PRs/issues) — never auto-merge. Explicitly out of scope: multi-language support, transitive dependency analysis, detecting independently-fixed consumers, real-time dashboards/Slack integration, and multi-agent architecture. When in doubt about whether to build something, check "Out of Scope" in `context/spec.md` first — the six-week build budget assumes these stay cut.
 
+## Changelog
+
+Every change you make to this repo must be logged in `CHANGELOG.md` at the repo root, under an `## [Unreleased]` heading, before you consider the task done. Add a bullet describing what changed and why (not a diff dump) under the appropriate subheading (`Added`, `Changed`, `Fixed`, `Removed`) — follow [Keep a Changelog](https://keepachangelog.com/) conventions. Do this as part of the same turn as the code change, not as a separate follow-up task.
+
 ## The line this project must not cross
 
 If call sites were ever found by text search and handed to a model asked "is this broken?", this degrades to grep with an LLM stapled on. The value is in tree-sitter deterministically extracting *how* a symbol is used (arguments, return-value consumption, surrounding error handling) and the model reasoning only over that grounded evidence. Any change to `get_call_sites` or `analyze_usage` should be checked against this line.
