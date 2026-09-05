@@ -1,0 +1,13 @@
+{
+  "name": "legacy-admin",
+  "version": "0.9.0",
+  "description": "Internal admin panel for manual refunds. Frozen; not actively developed.",
+  "main": "src/refund.js",
+  "license": "UNLICENSED",
+  "dependencies": {
+    "payments-lib": "^1.2.0"
+  },
+  "scripts": {
+    "test": "node --test test/"
+  }
+}

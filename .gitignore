@@ -24,6 +24,10 @@ htmlcov/
 *.sqlite3
 .dynamodb/
 
+# Node (fixtures)
+node_modules/
+package-lock.json
+
 # Docker
 docker-compose.override.yml
 

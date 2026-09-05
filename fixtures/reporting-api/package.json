@@ -1,0 +1,13 @@
+{
+  "name": "reporting-api",
+  "version": "1.0.0",
+  "description": "Read-only API surfacing historical payment activity for dashboards.",
+  "main": "src/history.js",
+  "license": "UNLICENSED",
+  "dependencies": {
+    "payments-lib": ">=1.0.0"
+  },
+  "scripts": {
+    "test": "node --test test/"
+  }
+}
