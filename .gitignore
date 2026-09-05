@@ -18,7 +18,6 @@ htmlcov/
 # Environment / secrets
 .env
 .env.*
-!.env.example
 
 # Local state
 *.sqlite
