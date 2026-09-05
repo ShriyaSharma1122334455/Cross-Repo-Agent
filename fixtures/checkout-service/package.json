@@ -1,0 +1,13 @@
+{
+  "name": "checkout-service",
+  "version": "1.0.0",
+  "description": "Handles cart checkout and payment capture.",
+  "main": "src/checkout.js",
+  "license": "UNLICENSED",
+  "dependencies": {
+    "payments-lib": ">=1.0.0"
+  },
+  "scripts": {
+    "test": "node --test test/"
+  }
+}

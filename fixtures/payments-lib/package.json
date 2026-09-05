@@ -1,0 +1,10 @@
+{
+  "name": "payments-lib",
+  "version": "1.2.0",
+  "description": "Shared payment-processing client used by internal services.",
+  "main": "index.js",
+  "license": "UNLICENSED",
+  "scripts": {
+    "test": "node --test test/"
+  }
+}

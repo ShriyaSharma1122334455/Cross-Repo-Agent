@@ -1,0 +1,13 @@
+{
+  "name": "billing-worker",
+  "version": "1.0.0",
+  "description": "Background worker that settles outstanding invoices.",
+  "main": "src/settle.js",
+  "license": "UNLICENSED",
+  "dependencies": {
+    "payments-lib": ">=1.0.0"
+  },
+  "scripts": {
+    "test": "node --test test/"
+  }
+}
