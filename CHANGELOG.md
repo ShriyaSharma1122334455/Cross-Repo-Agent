@@ -4,6 +4,9 @@ All notable changes to this project are documented here. Format follows [Keep a 
 
 ## [Unreleased]
 
+### Fixed
+- `fixtures/setup.sh` — `breaking-change-v2` is now branched from the just-pushed `main` (clone → checkout -b → overlay content → commit) instead of built from an independent `git init`. The old approach gave `main` and `breaking-change-v2` unrelated histories, so `gh pr create` failed with "no history in common with main"; under `set -euo pipefail` that aborted the script right after `payments-lib` was created, before any of the four consumer repos were touched.
+
 ### Added
 - `CLAUDE.md` — guidance for Claude Code, summarizing architecture, tech stack, and scope from `context/`.
 - `README.md` — project overview.

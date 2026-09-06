@@ -33,18 +33,34 @@ require_cmd git
 # Pushes $src_dir as the sole content of $branch on $TARGET_ORG/$repo,
 # creating the repo first if it doesn't exist. Force-pushes so re-running
 # always resets history and content, never accumulates stale commits.
+#
+# If $base_branch is given, $branch is created as a real descendant of it
+# (clone, branch off, overlay content, commit) instead of an unrelated
+# history — GitHub refuses to open a PR between branches with no common
+# ancestor, so any branch a PR will target against another must derive
+# from it this way.
 push_repo_branch() {
-  local repo="$1" branch="$2" src_dir="$3" commit_message="$4"
+  local repo="$1" branch="$2" src_dir="$3" commit_message="$4" base_branch="${5:-}"
 
   local work_dir
   work_dir="$(mktemp -d)"
   trap 'rm -rf "$work_dir"' RETURN
 
+  if [ -n "$base_branch" ]; then
+    git clone -q --branch "$base_branch" --single-branch \
+      "$REMOTE_URL_BASE/$TARGET_ORG/$repo.git" "$work_dir"
+    git -C "$work_dir" checkout -q -b "$branch"
+    # Clear out the base branch's tracked content so deletions (e.g. v2/)
+    # aren't left behind, then repopulate from src_dir.
+    git -C "$work_dir" rm -rq --ignore-unmatch -- . >/dev/null
+  else
+    git -C "$work_dir" init -q -b "$branch"
+  fi
+
   cp -r "$src_dir"/. "$work_dir"/
   rm -rf "$work_dir/v2" # payments-lib's v2/ overlay dir must never ship as-is
   rm -rf "$work_dir/node_modules" "$work_dir/package-lock.json" # never ship a dev's local install
 
-  git -C "$work_dir" init -q -b "$branch"
   git -C "$work_dir" add -A
   git -C "$work_dir" -c user.name="blast-radius-fixtures" \
     -c user.email="fixtures@blast-radius.invalid" \
@@ -57,7 +73,9 @@ push_repo_branch() {
     gh repo create "$TARGET_ORG/$repo" --"$VISIBILITY" >/dev/null
   fi
 
-  git -C "$work_dir" remote add origin "$REMOTE_URL_BASE/$TARGET_ORG/$repo.git"
+  if [ -z "$base_branch" ]; then
+    git -C "$work_dir" remote add origin "$REMOTE_URL_BASE/$TARGET_ORG/$repo.git"
+  fi
   git -C "$work_dir" push --force origin "$branch"
 }
 
@@ -72,7 +90,7 @@ cp -r "$FIXTURES_DIR/$PROVIDER_REPO"/. "$v2_work_dir"/
 rm -rf "$v2_work_dir/v2"
 cp -r "$FIXTURES_DIR/$PROVIDER_REPO/v2"/. "$v2_work_dir"/
 push_repo_branch "$PROVIDER_REPO" breaking-change-v2 "$v2_work_dir" \
-  "payments-lib 2.0.0: charge() argument order + throws on decline"
+  "payments-lib 2.0.0: charge() argument order + throws on decline" main
 rm -rf "$v2_work_dir"
 
 log "opening/updating breaking-change PR on $PROVIDER_REPO"
