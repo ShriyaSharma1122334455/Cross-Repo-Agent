@@ -26,3 +26,13 @@ class ChangeContract:
     pr_number: int
     target_version: str
     changes: list[SymbolChange] = field(default_factory=list)
+
+
+@dataclass(frozen=True)
+class PRDiff:
+    repo: str
+    pr_number: int
+    base_sha: str
+    head_sha: str
+    diff_text: str
+    changed_files: list[str] = field(default_factory=list)
